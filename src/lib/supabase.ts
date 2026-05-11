@@ -14,6 +14,7 @@ export const supabase = createClient(url ?? 'http://localhost', anon ?? 'public-
     persistSession: true,
     autoRefreshToken: true,
     detectSessionInUrl: true,
+    flowType: 'pkce',
   },
 })
 

@@ -1,8 +1,9 @@
-import { useState } from 'react'
-import { Link, useLocation } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useLocation, useNavigate } from 'react-router-dom'
 import { Loader2, Music } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
+import { useSession } from '@/lib/queries'
 
 type LocationState = { from?: string } | null
 
@@ -19,15 +20,23 @@ function GoogleIcon({ className }: { className?: string }) {
 
 export default function Login() {
   const location = useLocation()
+  const navigate = useNavigate()
+  const { user, loading } = useSession()
   const from = (location.state as LocationState)?.from ?? '/account'
 
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
 
+  useEffect(() => {
+    if (!loading && user) {
+      navigate(from, { replace: true })
+    }
+  }, [user, loading, from, navigate])
+
   const signInWithGoogle = async () => {
     setError(null)
     setSubmitting(true)
-    const redirectTo = `${window.location.origin}${from}`
+    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent(from)}`
     const { error: e } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -56,7 +65,7 @@ export default function Login() {
       <div className="mt-8 rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-7 space-y-4">
         <Button
           onClick={signInWithGoogle}
-          disabled={submitting}
+          disabled={submitting || loading}
           size="lg"
           variant="outline"
           className="w-full"

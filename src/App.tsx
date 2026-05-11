@@ -14,6 +14,7 @@ const Account = lazy(() => import('@/pages/Account'))
 const Admin = lazy(() => import('@/pages/Admin'))
 const Login = lazy(() => import('@/pages/Login'))
 const Register = lazy(() => import('@/pages/Register'))
+const AuthCallback = lazy(() => import('@/pages/AuthCallback'))
 const Success = lazy(() => import('@/pages/Success'))
 const Cancel = lazy(() => import('@/pages/Cancel'))
 const NotFound = lazy(() => import('@/pages/NotFound'))
@@ -72,6 +73,7 @@ export default function App() {
               />
               <Route path="/auth/login" element={<PageShell><Login /></PageShell>} />
               <Route path="/auth/register" element={<PageShell><Register /></PageShell>} />
+              <Route path="/auth/callback" element={<PageShell><AuthCallback /></PageShell>} />
               <Route path="/success" element={<PageShell><Success /></PageShell>} />
               <Route path="/cancel" element={<PageShell><Cancel /></PageShell>} />
               <Route path="*" element={<PageShell><NotFound /></PageShell>} />

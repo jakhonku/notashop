@@ -1,8 +1,9 @@
-import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { useEffect, useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
 import { Check, Loader2, Music } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
+import { useSession } from '@/lib/queries'
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -22,16 +23,25 @@ const perks = [
 ]
 
 export default function Register() {
+  const navigate = useNavigate()
+  const { user, loading } = useSession()
   const [error, setError] = useState<string | null>(null)
   const [submitting, setSubmitting] = useState(false)
+
+  useEffect(() => {
+    if (!loading && user) {
+      navigate('/account', { replace: true })
+    }
+  }, [user, loading, navigate])
 
   const signUpWithGoogle = async () => {
     setError(null)
     setSubmitting(true)
+    const redirectTo = `${window.location.origin}/auth/callback?next=${encodeURIComponent('/account')}`
     const { error: e } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
-        redirectTo: `${window.location.origin}/account`,
+        redirectTo,
         queryParams: { prompt: 'select_account' },
       },
     })
@@ -54,7 +64,7 @@ export default function Register() {
       <div className="mt-8 rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-7 space-y-5">
         <Button
           onClick={signUpWithGoogle}
-          disabled={submitting}
+          disabled={submitting || loading}
           size="lg"
           variant="outline"
           className="w-full"

@@ -10,14 +10,19 @@ export function useSession() {
 
   useEffect(() => {
     let mounted = true
-    supabase.auth.getSession().then(({ data }) => {
+
+    const { data: sub } = supabase.auth.onAuthStateChange((_event, s) => {
       if (!mounted) return
-      setSession(data.session)
+      setSession(s)
       setLoading(false)
     })
-    const { data: sub } = supabase.auth.onAuthStateChange((_e, s) => {
-      setSession(s)
+
+    supabase.auth.getSession().then(({ data }) => {
+      if (!mounted) return
+      setSession((prev) => prev ?? data.session)
+      setLoading(false)
     })
+
     return () => {
       mounted = false
       sub.subscription.unsubscribe()
