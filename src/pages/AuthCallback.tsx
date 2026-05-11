@@ -32,7 +32,7 @@ export default function AuthCallback() {
 
     const fallback = window.setTimeout(() => {
       if (!mounted) return
-      setError("Tizimga kirish kutilganidan ko'proq vaqt oldi. Qaytadan urinib ko'ring.")
+      setError("Tizimga kirish kutilganidan ko'proq vaqt oldi. Iltimos, qayta urinib ko'ring.")
       window.setTimeout(() => navigate('/auth/login', { replace: true }), 1500)
     }, 8000)
 
@@ -46,8 +46,8 @@ export default function AuthCallback() {
   return (
     <div className="container flex h-[60vh] flex-col items-center justify-center text-center">
       <Loader2 className="h-7 w-7 animate-spin text-ink-subtle" />
-      <p className="mt-4 text-ink-muted">Hisobingizga kirilmoqda...</p>
-      {error && <p className="mt-3 text-sm text-rose-600 max-w-sm">{error}</p>}
+      <p className="mt-5 text-ink-muted italic-serif text-lg">Hisobingizga kirilmoqda...</p>
+      {error && <p className="mt-3 text-sm text-rose-700 max-w-sm">{error}</p>}
     </div>
   )
 }

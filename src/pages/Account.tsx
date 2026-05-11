@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Download, Loader2, Music, ShoppingBag, User as UserIcon } from 'lucide-react'
+import { Download, Loader2, Music, ShoppingBag } from 'lucide-react'
 import { useMyPurchases, useProfile, useSession } from '@/lib/queries'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
@@ -30,26 +30,31 @@ export default function Account() {
     }
   }
 
+  const initial = (profile?.full_name || user?.email || '?').charAt(0).toUpperCase()
+
   return (
-    <div className="container py-10 md:py-14">
+    <div className="container py-12 md:py-16">
       <div className="flex items-center gap-5">
-        <div className="h-16 w-16 rounded-full bg-gradient-to-br from-accent to-purple-500 flex items-center justify-center text-white shadow-soft">
-          <UserIcon className="h-7 w-7" />
+        <div className="h-16 w-16 rounded-full bg-ink text-surface-base flex items-center justify-center font-serif text-2xl shadow-soft">
+          {initial}
         </div>
         <div>
-          <h1 className="text-3xl md:text-4xl font-semibold tracking-tight">
-            {profile?.full_name || 'Foydalanuvchi'}
+          <div className="text-xs uppercase tracking-[0.22em] text-ink-subtle">Mening profilim</div>
+          <h1 className="mt-1 font-serif text-3xl md:text-4xl tracking-tight">
+            {profile?.full_name || "Xush kelibsiz"}
           </h1>
-          <p className="text-ink-muted">{user?.email}</p>
+          <p className="text-ink-muted text-sm mt-0.5">{user?.email}</p>
         </div>
       </div>
 
-      <section className="mt-10">
-        <div className="flex items-end justify-between mb-6">
+      <section className="mt-12">
+        <div className="flex items-end justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-semibold tracking-tight">Sotib olingan notalar</h2>
-            <p className="text-ink-muted text-sm mt-1">
-              Notalar PDF formatda yuklab olinadi. Havolalar 1 soat ichida amal qiladi.
+            <div className="text-xs uppercase tracking-[0.22em] text-ink-subtle">Yig'ilma</div>
+            <h2 className="mt-2 font-serif text-3xl tracking-tight">Notalar to'plamim</h2>
+            <p className="text-ink-muted text-sm mt-2 max-w-md">
+              Sotib olingan barcha asarlar. Yuklab olish havolasi 1 soat davomida amal qiladi —
+              keyin yangisini olishingiz mumkin.
             </p>
           </div>
         </div>
@@ -59,9 +64,11 @@ export default function Account() {
             <Loader2 className="h-6 w-6 animate-spin text-ink-subtle" />
           </div>
         ) : !purchases || purchases.length === 0 ? (
-          <div className="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-10 text-center">
-            <ShoppingBag className="mx-auto h-10 w-10 text-ink-subtle" />
-            <p className="mt-4 text-ink-muted">Sizda hali sotib olingan notalar yo'q.</p>
+          <div className="rounded-3xl bg-surface ring-1 ring-ink/8 shadow-soft p-12 text-center">
+            <ShoppingBag className="mx-auto h-10 w-10 text-ink-subtle" strokeWidth={1.5} />
+            <p className="mt-4 text-ink-muted">
+              To'plamingiz bo'sh. Birinchi asaringizni katalogdan tanlang.
+            </p>
             <Button asChild className="mt-6">
               <Link to="/catalog">Katalogga o'tish</Link>
             </Button>
@@ -74,9 +81,9 @@ export default function Account() {
                 initial={{ opacity: 0, y: 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.35, delay: i * 0.04 }}
-                className="flex items-center gap-4 rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-4"
+                className="flex items-center gap-4 rounded-2xl bg-surface ring-1 ring-ink/8 shadow-soft p-4"
               >
-                <div className="h-20 w-16 shrink-0 overflow-hidden rounded-2xl bg-surface-alt">
+                <div className="h-20 w-16 shrink-0 overflow-hidden rounded-xl bg-surface-alt">
                   {p.note?.cover_url ? (
                     <img src={p.note.cover_url} alt={p.note.title} className="h-full w-full object-cover" />
                   ) : (
@@ -86,19 +93,19 @@ export default function Account() {
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
-                  <h3 className="font-medium truncate">{p.note?.title ?? 'Nota'}</h3>
-                  <p className="text-sm text-ink-muted truncate">
+                  <h3 className="font-serif text-lg leading-tight truncate">{p.note?.title ?? 'Asar'}</h3>
+                  <p className="text-sm italic-serif text-ink-muted truncate">
                     {p.note?.composer ?? '—'} · {p.note?.instrument ?? ''}
                   </p>
                   <p className="text-xs text-ink-subtle mt-1 tabular-nums">
-                    {p.amount_uzs ? formatPriceUZS(p.amount_uzs) : ''} · {' '}
+                    {p.amount_uzs ? formatPriceUZS(p.amount_uzs) : ''} ·{' '}
                     {new Date(p.created_at).toLocaleDateString('uz-UZ')}
                   </p>
                 </div>
                 <Button
                   onClick={() => p.note && downloadPdf(p.note_id, p.note.pdf_path)}
                   disabled={!p.note || downloadingId === p.note_id}
-                  variant="secondary"
+                  variant="outline"
                 >
                   {downloadingId === p.note_id ? (
                     <Loader2 className="h-4 w-4 animate-spin" />
@@ -112,7 +119,7 @@ export default function Account() {
           </div>
         )}
 
-        {error && <p className="mt-4 text-sm text-rose-600">{error}</p>}
+        {error && <p className="mt-4 text-sm text-rose-700">{error}</p>}
       </section>
     </div>
   )

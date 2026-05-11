@@ -9,20 +9,20 @@ import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
 import { Select } from '@/components/ui/select'
 import { Label } from '@/components/ui/label'
-import { Badge } from '@/components/ui/badge'
 import { useNotes } from '@/lib/queries'
 import { supabase } from '@/lib/supabase'
-import { CATEGORIES, DIFFICULTIES, INSTRUMENTS, difficultyTone, formatPriceUZS } from '@/lib/utils'
+import { CATEGORIES, DIFFICULTIES, INSTRUMENTS, cn, difficultyTone, formatPriceUZS } from '@/lib/utils'
+import { PendingOrdersPanel } from '@/components/PendingOrdersPanel'
 import type { Difficulty } from '@/types'
 
 const schema = z.object({
-  title: z.string().min(2, 'Sarlavha kamida 2 ta belgidan iborat bo\'lsin'),
+  title: z.string().min(2, "Sarlavha kamida 2 ta belgi bo'lsin"),
   composer: z.string().optional(),
   description: z.string().optional(),
   category: z.enum(CATEGORIES),
   instrument: z.enum(INSTRUMENTS),
   difficulty: z.enum(DIFFICULTIES),
-  price_uzs: z.coerce.number().int().nonnegative('Narx 0 dan kichik bo\'lmasin'),
+  price_uzs: z.coerce.number().int().nonnegative("Narx 0 dan kichik bo'lmasin"),
 })
 
 type FormValues = z.infer<typeof schema>
@@ -53,7 +53,7 @@ export default function Admin() {
     setError(null)
     setSuccess(null)
     if (!pdfFile) {
-      setError('PDF fayli majburiy')
+      setError("PDF fayl yuklash majburiy")
       return
     }
     setSubmitting(true)
@@ -92,7 +92,7 @@ export default function Admin() {
       })
       if (insertErr) throw insertErr
 
-      setSuccess('Nota muvaffaqiyatli qo\'shildi')
+      setSuccess("Asar muvaffaqiyatli qo'shildi")
       form.reset()
       setCoverFile(null)
       setPdfFile(null)
@@ -105,7 +105,7 @@ export default function Admin() {
   }
 
   const remove = async (id: string) => {
-    if (!confirm('Notani o\'chirishni tasdiqlaysizmi?')) return
+    if (!confirm("Asarni o'chirishni tasdiqlaysizmi?")) return
     const { error: e } = await supabase.from('notes').delete().eq('id', id)
     if (e) {
       setError(e.message)
@@ -115,22 +115,33 @@ export default function Admin() {
   }
 
   return (
-    <div className="container py-10 md:py-14">
-      <h1 className="text-4xl md:text-5xl font-semibold tracking-tight">Admin paneli</h1>
-      <p className="mt-2 text-ink-muted">Notalarni qo'shish, tahrirlash va o'chirish.</p>
+    <div className="container py-12 md:py-16">
+      <div className="text-xs uppercase tracking-[0.22em] text-ink-subtle">Boshqaruv</div>
+      <h1 className="mt-2 font-serif text-5xl md:text-6xl tracking-tight">Admin paneli</h1>
+      <p className="mt-3 text-ink-muted">
+        Asarlarni qo'shish, tahrirlash va o'chirish.
+      </p>
 
-      <div className="mt-10 grid lg:grid-cols-[400px_1fr] gap-8">
-        <section className="rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-6 h-fit lg:sticky lg:top-24">
-          <h2 className="text-lg font-semibold flex items-center gap-2">
-            <Plus className="h-5 w-5 text-accent" />
-            Yangi nota qo'shish
+      <section className="mt-12 rounded-3xl bg-surface ring-1 ring-ink/8 shadow-soft p-6">
+        <div className="text-xs uppercase tracking-[0.22em] text-ink-subtle">Buyurtmalar</div>
+        <h2 className="mt-2 font-serif text-3xl tracking-tight mb-6">
+          To'lov tasdig'i
+        </h2>
+        <PendingOrdersPanel />
+      </section>
+
+      <div className="mt-12 grid lg:grid-cols-[420px_1fr] gap-10">
+        <section className="rounded-3xl bg-surface ring-1 ring-ink/8 shadow-soft p-6 h-fit lg:sticky lg:top-24">
+          <h2 className="font-serif text-2xl flex items-center gap-2 tracking-tight">
+            <Plus className="h-5 w-5 text-gold-deep" />
+            Yangi asar
           </h2>
           <form onSubmit={form.handleSubmit(onSubmit)} className="mt-5 space-y-4">
             <div>
               <Label htmlFor="title">Sarlavha</Label>
               <Input id="title" className="mt-1.5" {...form.register('title')} />
               {form.formState.errors.title && (
-                <p className="mt-1 text-xs text-rose-600">{form.formState.errors.title.message}</p>
+                <p className="mt-1 text-xs text-rose-700">{form.formState.errors.title.message}</p>
               )}
             </div>
             <div>
@@ -143,7 +154,7 @@ export default function Admin() {
             </div>
             <div className="grid grid-cols-2 gap-3">
               <div>
-                <Label>Kategoriya</Label>
+                <Label>Bo'lim</Label>
                 <Select className="mt-1.5" {...form.register('category')}>
                   {CATEGORIES.map((c) => (
                     <option key={c} value={c}>{c}</option>
@@ -189,7 +200,7 @@ export default function Admin() {
               />
             </div>
             <div>
-              <Label>PDF fayl <span className="text-rose-500">*</span></Label>
+              <Label>PDF fayl <span className="text-rose-700">*</span></Label>
               <Input
                 type="file"
                 accept="application/pdf"
@@ -198,18 +209,20 @@ export default function Admin() {
               />
             </div>
 
-            {error && <p className="text-sm text-rose-600">{error}</p>}
-            {success && <p className="text-sm text-emerald-600">{success}</p>}
+            {error && <p className="text-sm text-rose-700">{error}</p>}
+            {success && <p className="text-sm text-emerald-700">{success}</p>}
 
             <Button type="submit" disabled={submitting} className="w-full">
               {submitting ? <Loader2 className="h-4 w-4 animate-spin" /> : <Upload className="h-4 w-4" />}
-              {submitting ? 'Yuklanmoqda...' : 'Qo\'shish'}
+              {submitting ? 'Yuklanmoqda...' : "Qo'shish"}
             </Button>
           </form>
         </section>
 
         <section>
-          <h2 className="text-lg font-semibold mb-4">Mavjud notalar ({notes?.length ?? 0})</h2>
+          <h2 className="font-serif text-2xl tracking-tight mb-5">
+            Mavjud asarlar ({notes?.length ?? 0})
+          </h2>
           {isLoading ? (
             <div className="flex h-40 items-center justify-center">
               <Loader2 className="h-6 w-6 animate-spin text-ink-subtle" />
@@ -219,26 +232,33 @@ export default function Admin() {
               {notes?.map((n) => (
                 <div
                   key={n.id}
-                  className="flex items-center gap-4 rounded-2xl bg-white ring-1 ring-black/5 p-3"
+                  className="flex items-center gap-4 rounded-2xl bg-surface ring-1 ring-ink/8 p-3"
                 >
-                  <div className="h-14 w-12 shrink-0 rounded-xl bg-surface-alt overflow-hidden">
+                  <div className="h-14 w-12 shrink-0 rounded-lg bg-surface-alt overflow-hidden">
                     {n.cover_url && (
                       <img src={n.cover_url} alt={n.title} className="h-full w-full object-cover" />
                     )}
                   </div>
                   <div className="flex-1 min-w-0">
-                    <h3 className="font-medium truncate">{n.title}</h3>
+                    <h3 className="font-serif text-lg leading-tight truncate">{n.title}</h3>
                     <p className="text-sm text-ink-muted truncate">
                       {n.composer ?? '—'} · {n.instrument} · {n.category}
                     </p>
                   </div>
-                  <Badge className={difficultyTone(n.difficulty)}>{n.difficulty}</Badge>
+                  <span
+                    className={cn(
+                      'hidden sm:inline-flex items-center rounded-full px-2.5 py-1 text-[10px] uppercase tracking-[0.14em] font-medium ring-1 ring-inset',
+                      difficultyTone(n.difficulty),
+                    )}
+                  >
+                    {n.difficulty}
+                  </span>
                   <span className="hidden sm:block text-sm font-medium tabular-nums">
                     {formatPriceUZS(n.price_uzs)}
                   </span>
                   <button
                     onClick={() => remove(n.id)}
-                    className="rounded-full p-2 text-ink-subtle hover:text-rose-600 hover:bg-rose-50"
+                    className="rounded-full p-2 text-ink-subtle hover:text-rose-700 hover:bg-rose-50"
                     aria-label="O'chirish"
                   >
                     <Trash2 className="h-4 w-4" />

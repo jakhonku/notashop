@@ -1,75 +1,95 @@
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { Piano, Guitar, Drum, Mic2, Music2 } from 'lucide-react'
 
 const items = [
   {
     name: 'Klassik',
-    desc: 'Mumtoz asarlar va kompozitorlar',
-    Icon: Piano,
-    tone: 'from-blue-500/10 to-indigo-500/5',
-    accent: 'text-blue-600',
+    label: 'I',
+    desc: 'Bax, Mozart, Shopen va boshqa mumtoz bastakorlar.',
+    tone: 'bg-[#1f3a5f] text-white',
   },
   {
     name: 'Zamonaviy',
-    desc: 'Zamonaviy aranjirovkalar',
-    Icon: Music2,
-    tone: 'from-purple-500/10 to-fuchsia-500/5',
-    accent: 'text-purple-600',
+    label: 'II',
+    desc: 'XX–XXI asr bastakorlari va aranjirovkalari.',
+    tone: 'bg-[#2c2925] text-white',
   },
   {
     name: "O'zbek",
-    desc: 'Milliy va xalq kuylari',
-    Icon: Drum,
-    tone: 'from-emerald-500/10 to-teal-500/5',
-    accent: 'text-emerald-600',
+    label: 'III',
+    desc: "Milliy mumtoz kuylar va xalq qo'shiqlari.",
+    tone: 'bg-[#a8624b] text-white',
   },
   {
     name: 'Jazz',
-    desc: 'Jazz standartlari va improvizatsiya',
-    Icon: Guitar,
-    tone: 'from-amber-500/10 to-orange-500/5',
-    accent: 'text-amber-700',
+    label: 'IV',
+    desc: 'Jazz standartlari, blues va improvizatsiya.',
+    tone: 'bg-[#7d5a2b] text-white',
   },
   {
     name: 'Pop',
-    desc: 'Hozirgi mashhur hit asarlar',
-    Icon: Mic2,
-    tone: 'from-rose-500/10 to-pink-500/5',
-    accent: 'text-rose-600',
+    label: 'V',
+    desc: 'Bugungi mashhur kompozitsiyalar va xitlar.',
+    tone: 'bg-[#594066] text-white',
   },
 ]
 
 export function CategoryGrid() {
   return (
-    <section className="container py-16 md:py-20">
-      <div className="flex items-end justify-between mb-8 md:mb-10">
+    <section className="container py-20 md:py-28">
+      <div className="grid md:grid-cols-[1fr_2fr] gap-10 md:gap-16 items-end mb-12">
         <div>
-          <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-ink">
-            Kategoriyalar bo'yicha
+          <div className="text-xs uppercase tracking-[0.22em] text-ink-subtle">
+            Bo'limlar
+          </div>
+          <h2 className="mt-3 font-serif text-4xl md:text-6xl leading-[1.02] tracking-tight text-ink text-balance">
+            Beshta yo'nalish, <br />
+            <span className="italic-serif text-accent">bir tanlov.</span>
           </h2>
-          <p className="mt-2 text-ink-muted">Sizga mos uslubni tanlang.</p>
         </div>
-        <Link to="/catalog" className="hidden md:inline text-sm font-medium text-accent hover:underline">
-          Barchasini ko'rish →
-        </Link>
+        <p className="text-ink-muted text-lg max-w-lg text-pretty">
+          Har bir bo'limda yetakchi bastakorlar va xalq durdonalari jamlangan. O'zingizga
+          yoqqan yo'nalishni tanlang va kashfiyotni boshlang.
+        </p>
       </div>
-      <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {items.map((c, i) => (
           <motion.div
             key={c.name}
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 14 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, margin: '-50px' }}
-            transition={{ duration: 0.4, delay: i * 0.05, ease: [0.22, 1, 0.36, 1] }}
+            viewport={{ once: true, margin: '-60px' }}
+            transition={{ duration: 0.5, delay: i * 0.06, ease: [0.22, 1, 0.36, 1] }}
+            className={i === 0 ? 'lg:row-span-2' : i === 4 ? 'md:col-span-2 lg:col-span-1' : ''}
           >
             <Link
               to={`/catalog?category=${encodeURIComponent(c.name)}`}
-              className={`group block rounded-3xl bg-gradient-to-br ${c.tone} ring-1 ring-black/5 p-6 h-full transition-all hover:-translate-y-1 hover:shadow-lift`}
+              className={`group relative block overflow-hidden rounded-3xl ${c.tone} p-7 md:p-9 h-full min-h-[220px] transition-all hover:-translate-y-0.5 hover:shadow-lift`}
             >
-              <c.Icon className={`h-8 w-8 ${c.accent}`} />
-              <h3 className="mt-6 text-lg font-semibold tracking-tight">{c.name}</h3>
-              <p className="mt-1 text-sm text-ink-muted">{c.desc}</p>
+              <div className="absolute inset-0 opacity-[0.06] mix-blend-screen pointer-events-none"
+                style={{
+                  backgroundImage: 'repeating-linear-gradient(0deg, currentColor 0, currentColor 1px, transparent 1px, transparent 8px)',
+                }}
+              />
+              <div className="relative flex flex-col h-full justify-between gap-12">
+                <div className="flex items-start justify-between gap-4">
+                  <span className="font-serif text-2xl opacity-50">{c.label}</span>
+                  <span className="text-[10px] uppercase tracking-[0.2em] opacity-60">
+                    {i === 0 ? 'Tavsiya' : ''}
+                  </span>
+                </div>
+                <div>
+                  <h3 className="font-serif text-3xl md:text-4xl leading-tight tracking-tight">
+                    {c.name}
+                  </h3>
+                  <p className="mt-2 text-sm opacity-75 max-w-[36ch]">{c.desc}</p>
+                  <div className="mt-5 text-xs uppercase tracking-[0.18em] opacity-80 flex items-center gap-1">
+                    <span>Ko'rish</span>
+                    <span className="transition-transform group-hover:translate-x-1">→</span>
+                  </div>
+                </div>
+              </div>
             </Link>
           </motion.div>
         ))}

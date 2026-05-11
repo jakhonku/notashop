@@ -40,6 +40,20 @@ export type CartItem = {
   cover_url: string | null
 }
 
+export type PendingOrder = {
+  id: string
+  user_id: string
+  user_email: string | null
+  user_name: string | null
+  customer_phone: string
+  note_ids: string[]
+  total_uzs: number
+  status: 'pending' | 'paid' | 'cancelled'
+  admin_note: string | null
+  created_at: string
+  confirmed_at: string | null
+}
+
 export type CatalogFilters = {
   search: string
   category: string | null

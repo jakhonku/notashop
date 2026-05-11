@@ -1,7 +1,6 @@
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { motion } from 'framer-motion'
-import { CheckCircle2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { useCart } from '@/store/cartStore'
 
@@ -13,27 +12,34 @@ export default function Success() {
   }, [clear])
 
   return (
-    <div className="container py-20 max-w-lg text-center">
+    <div className="container py-24 max-w-xl text-center">
       <motion.div
         initial={{ scale: 0, rotate: -15 }}
         animate={{ scale: 1, rotate: 0 }}
-        transition={{ type: 'spring', damping: 12, stiffness: 200 }}
-        className="mx-auto h-20 w-20 rounded-full bg-emerald-50 flex items-center justify-center"
+        transition={{ type: 'spring', damping: 14, stiffness: 200 }}
+        className="mx-auto h-20 w-20 rounded-full bg-gold/15 flex items-center justify-center ring-1 ring-gold/30"
       >
-        <CheckCircle2 className="h-10 w-10 text-emerald-600" />
+        <svg viewBox="0 0 24 24" className="h-10 w-10 text-gold-deep" fill="none" stroke="currentColor" strokeWidth="1.5">
+          <circle cx="12" cy="12" r="10" />
+          <path d="m8 12 3 3 5-6" strokeLinecap="round" strokeLinejoin="round" />
+        </svg>
       </motion.div>
-      <h1 className="mt-7 text-4xl md:text-5xl font-semibold tracking-tight">
-        Rahmat!
+      <div className="mt-7 text-xs uppercase tracking-[0.22em] text-ink-subtle">
+        To'lov qabul qilindi
+      </div>
+      <h1 className="mt-3 font-serif text-5xl md:text-6xl tracking-tight">
+        Tashakkur.
       </h1>
-      <p className="mt-3 text-ink-muted text-lg">
-        To'lovingiz qabul qilindi. Sotib olingan notalarni profilingizdan yuklab olishingiz mumkin.
+      <p className="mt-4 text-ink-muted text-lg text-pretty">
+        Buyurtmangiz muvaffaqiyatli rasmiylashtirildi. Sotib olingan notalarni profilingizdan
+        yuklab olishingiz mumkin.
       </p>
-      <div className="mt-8 flex justify-center gap-3">
+      <div className="mt-8 flex flex-wrap justify-center gap-3">
         <Button asChild size="lg">
-          <Link to="/account">Profilga o'tish</Link>
+          <Link to="/account">Profilimga o'tish</Link>
         </Button>
-        <Button asChild size="lg" variant="secondary">
-          <Link to="/catalog">Katalogga qaytish</Link>
+        <Button asChild size="lg" variant="outline">
+          <Link to="/catalog">Yana ko'rish</Link>
         </Button>
       </div>
     </div>

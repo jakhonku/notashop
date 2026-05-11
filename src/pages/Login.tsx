@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useLocation, useNavigate } from 'react-router-dom'
-import { Loader2, Music } from 'lucide-react'
+import { Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
 import { useSession } from '@/lib/queries'
@@ -45,24 +45,26 @@ export default function Login() {
       },
     })
     if (e) {
-      setError('Google orqali kirishda xatolik yuz berdi. Qaytadan urinib ko\'ring.')
+      setError("Google orqali kirishda xatolik yuz berdi. Qaytadan urinib ko'ring.")
       setSubmitting(false)
     }
   }
 
   return (
-    <div className="container py-16 max-w-md">
+    <div className="container py-20 max-w-md">
       <div className="text-center">
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-white shadow-[0_4px_12px_rgba(0,113,227,0.3)]">
-          <Music className="h-5 w-5" />
-        </span>
-        <h1 className="mt-5 text-3xl font-semibold tracking-tight">Hisobga kirish</h1>
-        <p className="mt-2 text-ink-muted">
-          Google hisobingiz orqali bir bosishda kiring.
+        <div className="text-xs uppercase tracking-[0.22em] text-ink-subtle">
+          NotaShop
+        </div>
+        <h1 className="mt-3 font-serif text-5xl tracking-tight">
+          Xush <span className="italic-serif">kelibsiz.</span>
+        </h1>
+        <p className="mt-3 text-ink-muted">
+          Hisobingizga Google orqali bir bosishda kiring.
         </p>
       </div>
 
-      <div className="mt-8 rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-7 space-y-4">
+      <div className="mt-10 rounded-3xl bg-surface ring-1 ring-ink/8 shadow-soft p-7 space-y-4">
         <Button
           onClick={signInWithGoogle}
           disabled={submitting || loading}
@@ -78,19 +80,20 @@ export default function Login() {
           Google bilan davom etish
         </Button>
 
-        {error && <p className="text-sm text-rose-600 text-center">{error}</p>}
+        {error && <p className="text-sm text-rose-700 text-center">{error}</p>}
+
+        <div className="ink-divider my-2" />
 
         <p className="text-center text-xs text-ink-subtle leading-relaxed">
-          Davom etish orqali siz xizmatdan foydalanish shartlariga roziligingizni bildirgan
-          hisoblanasiz. Hisobingiz birinchi marta kirayotgan bo'lsa, avtomatik ravishda
-          ro'yxatdan o'tasiz.
+          Davom etish orqali xizmatdan foydalanish shartlariga rozilik bildirasiz.
+          Ilk marta kirayotgan bo'lsangiz, hisob avtomatik tarzda yaratiladi.
         </p>
       </div>
 
-      <p className="mt-6 text-center text-sm text-ink-muted">
-        Yangi foydalanuvchi?{' '}
-        <Link to="/auth/register" className="text-accent font-medium hover:underline">
-          Ro'yxatdan o'tish
+      <p className="mt-8 text-center text-sm text-ink-muted">
+        Yangimisiz?{' '}
+        <Link to="/auth/register" className="text-ink font-medium hover:text-accent underline-offset-4 hover:underline">
+          Hisob ochish
         </Link>
       </p>
     </div>

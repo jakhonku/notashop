@@ -2,7 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useEffect, useState } from 'react'
 import type { Session, User } from '@supabase/supabase-js'
 import { supabase } from './supabase'
-import type { Note, Profile, Purchase } from '@/types'
+import type { Note, PendingOrder, Profile, Purchase } from '@/types'
 
 export function useSession() {
   const [session, setSession] = useState<Session | null>(null)
@@ -76,6 +76,20 @@ export function useNote(id: string | undefined) {
         .maybeSingle()
       if (error) throw error
       return data as Note | null
+    },
+  })
+}
+
+export function usePendingOrders() {
+  return useQuery<PendingOrder[]>({
+    queryKey: ['pending-orders'],
+    queryFn: async () => {
+      const { data, error } = await supabase
+        .from('pending_orders')
+        .select('*')
+        .order('created_at', { ascending: false })
+      if (error) throw error
+      return (data ?? []) as PendingOrder[]
     },
   })
 }

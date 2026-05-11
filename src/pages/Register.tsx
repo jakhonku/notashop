@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { Check, Loader2, Music } from 'lucide-react'
+import { Check, Loader2 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { supabase } from '@/lib/supabase'
 import { useSession } from '@/lib/queries'
@@ -17,9 +17,10 @@ function GoogleIcon({ className }: { className?: string }) {
 }
 
 const perks = [
-  'Hisob ochish bepul va bir bosishda',
-  "Sotib olgan notalar profilingizda doimiy saqlanadi",
-  "Email tasdiqlash, parol o'ylab topish shart emas",
+  'Hisob ochish bepul va tezkor',
+  "Sotib olingan notalar profilingizda saqlanib qoladi",
+  'Email tasdiqlash va parol talab qilinmaydi',
+  "Istalgan vaqtda yuklab olish imkoniyati",
 ]
 
 export default function Register() {
@@ -52,16 +53,18 @@ export default function Register() {
   }
 
   return (
-    <div className="container py-16 max-w-md">
+    <div className="container py-20 max-w-md">
       <div className="text-center">
-        <span className="inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-accent text-white shadow-[0_4px_12px_rgba(0,113,227,0.3)]">
-          <Music className="h-5 w-5" />
-        </span>
-        <h1 className="mt-5 text-3xl font-semibold tracking-tight">Ro'yxatdan o'tish</h1>
-        <p className="mt-2 text-ink-muted">Google hisob bilan bir daqiqada boshlang.</p>
+        <div className="text-xs uppercase tracking-[0.22em] text-ink-subtle">NotaShop</div>
+        <h1 className="mt-3 font-serif text-5xl tracking-tight">
+          Birga <span className="italic-serif">boshlaymiz.</span>
+        </h1>
+        <p className="mt-3 text-ink-muted">
+          Google hisobingiz bilan bir daqiqada hisob oching.
+        </p>
       </div>
 
-      <div className="mt-8 rounded-3xl bg-white ring-1 ring-black/5 shadow-soft p-7 space-y-5">
+      <div className="mt-10 rounded-3xl bg-surface ring-1 ring-ink/8 shadow-soft p-7 space-y-5">
         <Button
           onClick={signUpWithGoogle}
           disabled={submitting || loading}
@@ -77,21 +80,23 @@ export default function Register() {
           Google bilan ro'yxatdan o'tish
         </Button>
 
-        <ul className="space-y-2.5 pt-2">
+        <div className="ink-divider" />
+
+        <ul className="space-y-3 text-sm text-ink-muted">
           {perks.map((p) => (
-            <li key={p} className="flex items-start gap-2.5 text-sm text-ink-muted">
-              <Check className="h-4 w-4 text-emerald-500 mt-0.5 shrink-0" />
+            <li key={p} className="flex items-start gap-2.5">
+              <Check className="h-4 w-4 text-gold-deep mt-0.5 shrink-0" strokeWidth={2.5} />
               <span>{p}</span>
             </li>
           ))}
         </ul>
 
-        {error && <p className="text-sm text-rose-600 text-center">{error}</p>}
+        {error && <p className="text-sm text-rose-700 text-center">{error}</p>}
       </div>
 
-      <p className="mt-6 text-center text-sm text-ink-muted">
+      <p className="mt-8 text-center text-sm text-ink-muted">
         Hisobingiz bormi?{' '}
-        <Link to="/auth/login" className="text-accent font-medium hover:underline">
+        <Link to="/auth/login" className="text-ink font-medium hover:text-accent underline-offset-4 hover:underline">
           Kirish
         </Link>
       </p>
